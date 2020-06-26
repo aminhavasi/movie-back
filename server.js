@@ -4,6 +4,8 @@ const app = express();
 const httpServer = http.createServer(app);
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
+app.use(cors());
 require('dotenv').config();
 
 mongoose.connect(process.env.URI, {
