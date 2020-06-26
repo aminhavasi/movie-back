@@ -8,11 +8,18 @@ persianDate.toLocale('en');
 const date = new persianDate().format('YYYY/M/DD');
 const registerValidator = (user) => {
     const schema = Joi.object({
-        username: Joi.string(),
-        email: Joi.string(),
-        password: Joi.string(),
+        username: Joi.string().min(3).max(255).required(),
+        email: Joi.string().email().required().max(255),
+        password: Joi.string().min(8).max(1024).required(),
     });
 
+    return schema.validate(user);
+};
+const loginValidator = (user) => {
+    const schema = Joi.object({
+        email: Joi.string().email().max(255).required(),
+        password: Joi.string().min(8).max(1024).required(),
+    });
     return schema.validate(user);
 };
 
@@ -30,6 +37,16 @@ router.post('/register', async (req, res) => {
     } catch (err) {
         res.status(400).send('1111');
     }
+});
+
+router.post('/login', async (req, res) => {
+    try {
+        const body = _.pick(req.body, ['email', 'password']);
+        const { error } = await loginValidator(body);
+        if (error) return res.status(400).send(error.details[0].message);
+        let user = await User.findByCredentials(body.email, body.password);
+        let user = await User.findByCredentials(body.email, body.password);
+    } catch (err) {}
 });
 
 module.exports = router;

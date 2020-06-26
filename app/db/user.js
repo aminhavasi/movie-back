@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const { has } = require('lodash');
+const { has, reject } = require('lodash');
 const userSchema = new mongoose.Schema(
     {
         username: {
@@ -22,9 +22,40 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        tokens: [
+            {
+                _id: false,
+                access: {
+                    type: String,
+                    required: true,
+                },
+                token: {
+                    type: String,
+                    required: true,
+                },
+            },
+        ],
     },
     { timestamps: true }
 );
+
+userSchema.statics.findByCredentials = function (email, password) {
+    let User = this;
+    return User.findOne({ email }).then((user) => {
+        if (!user) {
+            return Promise.reject();
+        }
+        return new Promise((resolve, reject) => {
+            bcrypt.compare(password, user.password, (err, res) => {
+                if (res) {
+                    resolve(user);
+                } else {
+                    reject();
+                }
+            });
+        });
+    });
+};
 
 userSchema.pre('save', function (next) {
     let user = this;
