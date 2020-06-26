@@ -43,10 +43,16 @@ router.post('/login', async (req, res) => {
     try {
         const body = _.pick(req.body, ['email', 'password']);
         const { error } = await loginValidator(body);
+
         if (error) return res.status(400).send(error.details[0].message);
         let user = await User.findByCredentials(body.email, body.password);
-        let user = await User.findByCredentials(body.email, body.password);
-    } catch (err) {}
+        let token = await user.generateAuthToken();
+        res.header('x-auth', token).status(200).send(token);
+    } catch (err) {
+        res.status(400).json({
+            Error: `Something went wrong. ${err}`,
+        });
+    }
 });
 
 module.exports = router;

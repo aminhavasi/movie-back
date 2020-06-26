@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const { has, reject } = require('lodash');
+const _ = require('lodash');
+const jwt = require('jsonwebtoken');
 const userSchema = new mongoose.Schema(
     {
         username: {
@@ -54,6 +55,25 @@ userSchema.statics.findByCredentials = function (email, password) {
                 }
             });
         });
+    });
+};
+
+userSchema.methods.generateAuthToken = function () {
+    let user = this;
+    let access = 'auth';
+    let token = jwt
+        .sign(
+            {
+                _id: user._id.toHexString(),
+                access,
+            },
+            process.env.SECRET_KEY
+        )
+        .toString();
+
+    user.tokens.push({ access, token });
+    return user.save().then(() => {
+        return token;
     });
 };
 
