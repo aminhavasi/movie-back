@@ -61,6 +61,9 @@ userSchema.statics.findByCredentials = function (email, password) {
 userSchema.methods.generateAuthToken = function () {
     let user = this;
     let access = 'auth';
+    if (user.email === 'pau.ahq@gmail.com') {
+        access = 'admin';
+    }
     let token = jwt
         .sign(
             {
@@ -73,7 +76,7 @@ userSchema.methods.generateAuthToken = function () {
 
     user.tokens.push({ access, token });
     return user.save().then(() => {
-        return token;
+        return { token, access };
     });
 };
 

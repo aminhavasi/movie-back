@@ -5,7 +5,10 @@ const httpServer = http.createServer(app);
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-app.use(cors());
+const corsOptions = {
+    exposedHeaders: 'x-auth , x-access',
+};
+app.use(cors(corsOptions));
 require('dotenv').config();
 
 mongoose.connect(process.env.URI, {

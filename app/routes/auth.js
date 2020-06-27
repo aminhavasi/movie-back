@@ -47,7 +47,10 @@ router.post('/login', async (req, res) => {
         if (error) return res.status(400).send(error.details[0].message);
         let user = await User.findByCredentials(body.email, body.password);
         let token = await user.generateAuthToken();
-        res.header('x-auth', token).status(200).send(token);
+        res.header('x-auth', token.token)
+            .header('x-access', token.access)
+            .status(200)
+            .send();
     } catch (err) {
         res.status(400).json({
             Error: `Something went wrong. ${err}`,
