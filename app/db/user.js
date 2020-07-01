@@ -36,6 +36,34 @@ const userSchema = new mongoose.Schema(
                 },
             },
         ],
+        admins: [
+            {
+                _id: false,
+                sex: {
+                    type: String,
+                    required: true,
+                },
+                age: {
+                    type: Number,
+                    required: true,
+                },
+                from: {
+                    type: String,
+                    required: true,
+                },
+                price: {
+                    type: String,
+                    required: true,
+                },
+                access: {
+                    type: Boolean,
+                    default: true,
+                },
+                work: {
+                    type: Number,
+                },
+            },
+        ],
     },
     { timestamps: true }
 );
