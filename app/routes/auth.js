@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Joi = require('@hapi/joi');
-const User = require('./../db/user');
+const User = require('./../models/user');
 const persianDate = require('persian-date');
 const _ = require('lodash');
 persianDate.toLocale('en');

@@ -5,6 +5,8 @@ const httpServer = http.createServer(app);
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const upload = require('express-fileupload');
+app.use(upload());
 const corsOptions = {
     exposedHeaders: 'x-auth , x-access',
 };
